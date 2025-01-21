@@ -93,7 +93,7 @@ const App = () => {
       })
     console.log('New person', personObject)
   }
-
+  
   const deletePerson = (id) => { 
     const person = persons.find(person => person.id === id)
     const result = window.confirm(`Delete ${person.name} ?`)
@@ -105,6 +105,7 @@ const App = () => {
         })
     }
   }
+  
 
   const handleNewName = (event) => {
     console.log(event.target.value)
