@@ -1,0 +1,35 @@
+ul {
+    padding: 0;
+    list-style: none;
+}
+
+.button {
+    margin-left: 10px;
+    background-color: white;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: steelblue;
+}
+
+.notification {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+.notification.success {
+    color: green;
+    background: lightgrey;
+    border-style: solid;
+}
+
+.notification.error {
+    color: red;
+    background: lightgrey;
+    border-style: solid;
+}

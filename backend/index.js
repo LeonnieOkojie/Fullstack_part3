@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
 let persons = [
     {
@@ -47,6 +48,7 @@ const requestLogger = (request, response, next) => {
     next()
 }
 
+app.use(cors())
 app.use(requestLogger)
 
 app.get('/', (request, response) => {
