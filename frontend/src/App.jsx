@@ -82,8 +82,9 @@ const App = () => {
       })
 
       .catch(error => {
+        console.error('Error adding person:', error.response.data)
         setShowMessage(
-          `Failed to add '${newName}'`
+          `Failed to add '${newName}' : ${error.response.data.error}`
         )
         setPersons(persons.filter(person => person.id !==existingUser.id))
         setMessageType('error')
