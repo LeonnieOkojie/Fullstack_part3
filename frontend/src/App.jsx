@@ -55,7 +55,6 @@ const App = () => {
             `Information of '${existingUser.name}' has been removed from server`
           )
           setMessageType('error') // set the message type to enable styling
-          setPersons(persons.filter(person => person.id !==existingUser.id))
           setTimeout(() => {
             setShowMessage(null)
           }, 5000)
@@ -70,11 +69,11 @@ const App = () => {
 
     personService
       .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson)) // Adds the new person to the array
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson)) // Adds the new person to the array
         setNewName('') // Resets the input field
         setPhoneNumber('') // Resets the input field 
-        setShowMessage(`Added ${returnedPerson.name}`)
+        setShowMessage(`Added ${newPerson.name}`)
         setMessageType('success')
         setTimeout(() => {
           setShowMessage(null)
@@ -82,12 +81,9 @@ const App = () => {
       })
 
       .catch(error => {
-        console.error('Error adding person:', error.response.data)
-        setShowMessage(
-          `Failed to add '${newName}' : ${error.response.data.error}`
-        )
-        setPersons(persons.filter(person => person.id !==existingUser.id))
+        setShowMessage(error.response.data.error)
         setMessageType('error')
+        console.log('Error:', error.response.data.error)
         setTimeout(() => {
           setShowMessage(null)
         }, 5000)

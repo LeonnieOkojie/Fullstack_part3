@@ -61,7 +61,7 @@ app.get('/api/persons/:id', (request, response, next) => {
         })
         .catch(error => next(error))
 })
-
+// delete request for deleting a person from the phonebook
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
         .then(person => {
@@ -73,24 +73,28 @@ app.delete('/api/persons/:id', (request, response, next) => {
         })
         .catch(error => next(error)) 
 })
-
-app.post('/api/persons', (request, response) => {
+// post request for adding a new person to the phonebook
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
-
-    if(!body.name || !body.number) {
-        return response.status(400).json({
-            error: 'name or number missing'
-        })
-    }
 
     const person = new Person({
         name: body.name,
         number: body.number,
     })
 
-    person.save().then(savedPerson => {
-        response.json(savedPerson)
-    })
+    Person.findOne({ name: person.name}) // checks if the name already exists
+        .then(existingPerson => {
+            if (existingPerson) {
+                return response.status(400).json({ message : 'Name already exists' })
+            }
+
+            person.save() 
+                .then(result => {
+                    console.log(result)
+                    response.json(person)
+                }).catch(error => next(error))
+        })
+        .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -98,23 +102,27 @@ app.put('/api/persons/:id', (request, response, next) => {
 
     const person = {
         name: body.name,
-        number: body.number,
+        number: body.number
     }
-
-    Person.findByIdAndUpdate(request.params.id, person, { new: true})
+    
+    Person.findByIdAndUpdate( 
+        request.params.id, 
+        person, 
+        { new: true, runValidators: true, context: 'query' } // returns the updated document
+    )
         .then(updatedPerson => {
-            response.json(updatedPerson)
+            response.json(updatedPerson) //returns the updated person
         })
         .catch(error => next(error))
 })
-
+// Error handling middleware 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, request, response, next) => { 
     console.error(error.message)
 
     if (error.name === 'CastError') {
@@ -123,7 +131,7 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).json({ error: error.message })
     }
 
-    next(error)
+    next(error) // passes the error to the default express handler
 }
 
 app.use(errorHandler)
