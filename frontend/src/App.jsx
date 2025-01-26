@@ -51,6 +51,7 @@ const App = () => {
         })
 
         .catch(error => { //used catch for error handling
+          console.log(error)
           setShowMessage(
             `Information of '${existingUser.name}' has been removed from server`
           )
@@ -121,6 +122,7 @@ const App = () => {
 
   const personsToShow = persons.filter(person => 
       person.name.toLowerCase().includes
+      // eslint-disable-next-line no-unexpected-multiline
       (filterPerson.toLowerCase()) // filters name based on the input
     )
 
